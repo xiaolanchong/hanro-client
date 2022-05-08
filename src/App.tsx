@@ -1,9 +1,11 @@
-import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-//import { MatrixList } from './MatrixList.js'
-//import { Matrix } from './Matrix.js'
 import { MainPage } from './MainPage'
+import { AboutPage } from './AboutPage'
+import { LetterIndexPage } from './ContentPage'
+import { SyllableIndexPage } from './SyllableIndexPage'
+import { WordListPage } from './WordListPage'
+import { WordPage } from './WordPage'
 import { NavBar } from './NavBar'
 
 function Error() {
@@ -16,14 +18,17 @@ function Error() {
 }
 
 function App() {
-  // <Route path="/matrix" component={Matrix}/>
   return (
       <BrowserRouter>
          <NavBar />
             <Routes>
-              <Route path="/" element={<MainPage />} />         
-              <Route element={<Error />}>
-              </Route>
+              <Route path="/" element={<MainPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/content" element={<LetterIndexPage /> } />
+              <Route path="/content/:startWith" element={<SyllableIndexPage /> } />
+              <Route path="/wordlist/:startWith" element={<WordListPage /> } />
+              <Route path="/word/:word" element={<WordPage /> } />
+              <Route element={<Error />} />
            </Routes>
       </BrowserRouter>
   );

@@ -3,7 +3,7 @@ import {Modal, Button, Form} from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import { getUser } from './Server'
 
-const UserControl = () => {
+const AuthControl = () => {
    const [username, setUsername] = useState<string|undefined>(undefined);
    //const history = useHistory();
    
@@ -104,8 +104,9 @@ class NavBar extends React.Component {
             <nav className='p-1 bg-dark'>
                <img className=' m-2' src='/korean-russian-flag.png' alt='logo' width='32' height='32' />
                <NavLink to='/' className=' m-2'>На главную</NavLink>
+               <NavLink to='/content' className=' m-2'>Содержание</NavLink>
                <NavLink to='/about' className=' m-2'>О словаре</NavLink>
-               <UserControl />
+               <AuthControl />
             </nav>
          </header>
       );
