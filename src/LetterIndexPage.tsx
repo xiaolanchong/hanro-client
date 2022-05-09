@@ -1,21 +1,19 @@
 import { useState, useEffect } from "react"
-import {useParams} from 'react-router'
 
 type Entries = Array<string>
 
 const LetterIndexPage = () => {
-    //const startWith: string|undefined = params.startWith
     const [entries, setEntries] = useState<Entries>([])
 
-    const indexGetter = async () => {
-        const response = await fetch(`/api/index`)
-        const parsedEntries: Entries = await response.json()
-        setEntries(parsedEntries);
-     }
-
     useEffect(() => {
+        const indexGetter = async () => {
+            const response = await fetch(`/api/index`)
+            const parsedEntries: Entries = await response.json()
+            setEntries(parsedEntries);
+         }
+
         indexGetter()
-     })
+     }, [])
 
     return <>
         <div className="container">

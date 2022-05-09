@@ -9,15 +9,15 @@ const SyllableIndexPage = () => {
     const startWith: string|undefined = params.startWith
     const [words, setWords] = useState<Entries>([])
 
-    const indexGetter = async (startWith: string|undefined) => {
-        const response = await fetch(`/api/index/${startWith}`)
-        const parsedWords: Entries = await response.json()
-        setWords(parsedWords);
-     }
-
     useEffect(() => {
+        const indexGetter = async (startWith: string|undefined) => {
+            const response = await fetch(`/api/index/${startWith}`)
+            const parsedWords: Entries = await response.json()
+            setWords(parsedWords);
+         }
+
         indexGetter(startWith)
-     })
+     }, [startWith])
 
     return <>
         <div className="container">

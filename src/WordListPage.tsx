@@ -9,15 +9,15 @@ const WordListPage = () => {
     const startWith: string|undefined = params.startWith
     const [words, setWords] = useState<WordList>([])
 
-    const wordListGetter = async (startWith: string|undefined) => {
-        const response = await fetch(`/api/words/${startWith}`)
-        const parsedWords: WordList = await response.json()
-        setWords(parsedWords);
-     }
-
     useEffect(() => {
+        const wordListGetter = async (startWith: string|undefined) => {
+            const response = await fetch(`/api/words/${startWith}`)
+            const parsedWords: WordList = await response.json()
+            setWords(parsedWords);
+         }
+
         wordListGetter(startWith)
-     })
+     }, [startWith])
 
     return <>
         <div className="container">
