@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {Modal, Button, Form} from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
+import {Navbar, Container, Nav} from 'react-bootstrap'
 import { getUser } from './Server'
+import './NavBar.css'
 
 const AuthControl = () => {
-   const [username, setUsername] = useState<string|undefined>(undefined);
-   //const history = useHistory();
+   const [username, setUsername] = useState<string|undefined>(undefined)
    
    useEffect(() => {
-      userGetter();
+      userGetter()
    });
 
    const userGetter = async () => {
@@ -17,9 +17,8 @@ const AuthControl = () => {
    }
    
    const onLogout = () => {
-      getUser().logout();
-      setUsername(undefined);
-     // history.push('/');
+      getUser().logout()
+      setUsername(undefined)
    }
    
    return (username === undefined)
@@ -85,10 +84,10 @@ function Login() {
          </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={ () => { handleClose(); login(); } }>
+          <Button variant="primary" className="primary-dark"  onClick={ () => { handleClose(); login(); } }>
             Вход
           </Button>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" className="secondary-dark" onClick={handleClose}>
             Отмена
           </Button>
         </Modal.Footer>
@@ -97,20 +96,25 @@ function Login() {
   );
 }
 
-class NavBar extends React.Component {
-   render() {
-      return (
-         <header>
-            <nav className='p-1 bg-dark'>
-               <img className=' m-2' src='/korean-russian-flag.png' alt='logo' width='32' height='32' />
-               <NavLink to='/' className=' m-2'>На главную</NavLink>
-               <NavLink to='/content' className=' m-2'>Содержание</NavLink>
-               <NavLink to='/about' className=' m-2'>О словаре</NavLink>
-               <AuthControl />
-            </nav>
-         </header>
-      );
-   }
+const NavBar = () => {
+   return <Navbar bg="dark" variant="dark">
+   <Container>
+     <Navbar.Brand href="/">
+       <img
+         alt="logo"
+         src="/korean-russian-flag.png"
+         width="32"
+         height="32"
+         className="d-inline-block align-top"
+       />{' '}
+     Ханро
+     </Navbar.Brand>
+     <Nav className="me-auto">
+        <Nav.Link href="/index">Содержание</Nav.Link>
+      </Nav>
+      <AuthControl />
+   </Container>
+ </Navbar>
 }
 
 export { NavBar };

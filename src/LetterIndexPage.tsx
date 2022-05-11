@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import './index.css'
 
 type Entries = Array<string>
 
@@ -13,14 +14,15 @@ const LetterIndexPage = () => {
          }
 
         indexGetter()
+        .catch(console.error)
      }, [])
 
     return <>
         <div className="container">
-            <h2 style={{textAlign: 'center'}}>Содержимое</h2>
+            <h2 style={{textAlign: 'center'}}>Начальные буквы</h2>
             {
                 entries.map((letterOrSyllable, index) => {
-                    return <span className='m-3' key={index}><a href={`/content/${letterOrSyllable}`}>{letterOrSyllable}</a></span>
+                    return <span className='m-3 index-text' key={index}><a href={`/index/${letterOrSyllable}`}>{letterOrSyllable}</a></span>
                 })
             }
         </div>

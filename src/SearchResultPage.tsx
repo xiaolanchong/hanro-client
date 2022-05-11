@@ -9,8 +9,9 @@ const SearchResultPage = ()  =>  {
                 <div className="col-12">
                 <h2 style={{textAlign: 'center'}}>Открытый корейско-русский словарь (한러사전)</h2>
                 </div>
+                <SearchControl />
             </div>
-            <SearchControl />
+            
         </div>
 
         <WordPage />

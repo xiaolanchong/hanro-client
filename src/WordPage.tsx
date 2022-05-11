@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import {useParams} from 'react-router'
+import './WordPage.css'
 
 type Entry = {
     id: number,
@@ -12,10 +13,23 @@ type Props = {
     definition: string
 }
 
-const DefinitionSection = ({definition}: Props) => {
+const Section = ({definition}: Props) => {
     return <>{
         definition.split('\n').map( (line, index) => {
-            return <li className='' key={index}>{line}</li>
+            if(index < 2)
+                return <li className='' key={index}>{line}</li>
+            else
+                return <li  key={index} className='sample-text mx-2'>{line}</li>
+        })
+    }</>
+}
+
+const Definition = ({definition}: Props) => {
+    return <>{
+        definition.split('\n\n').map( (section, index) => {
+            return <section className='my-3' key={index}>
+                       <Section definition={section} />
+                   </section>       
         })
     }</>
 }
@@ -34,7 +48,6 @@ const WordPage = () => {
 
         definitionListGetter(word)
         .catch(console.error)
-       // console.log('Render')
      }, [word])
 
      const ResultRender = () => {
@@ -49,7 +62,9 @@ const WordPage = () => {
                     {
                         definitionList.map((entry:Entry, index) => {
                             //return <pre className='my-3' key={index}>{entry.definition}</pre>
-                            return <section key={index}><ul className='list-unstyled'><DefinitionSection definition={entry.definition} /></ul></section>  //className='my-3' key={index}>{entry.definition}
+                            return <section key={index}>
+                                      <ul className='list-unstyled'><Definition definition={entry.definition} /></ul>
+                                   </section>
                     })}
                 </>      
      }

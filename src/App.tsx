@@ -8,6 +8,7 @@ import { WordListPage } from './WordListPage'
 import { WordPage } from './WordPage'
 import { SearchResultPage } from './SearchResultPage'
 import { NavBar } from './NavBar'
+import { Footer } from './Footer'
 
 function Error() {
    return (
@@ -19,20 +20,23 @@ function Error() {
 }
 
 function App() {
-  return (
-      <BrowserRouter>
-         <NavBar />
+  return (<>
+         <BrowserRouter>
+            <NavBar />
             <Routes>
-              <Route path="/" element={<MainPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/content" element={<LetterIndexPage /> } />
-              <Route path="/content/:startWith" element={<SyllableIndexPage /> } />
-              <Route path="/wordlist/:startWith" element={<WordListPage /> } />
-              <Route path="/word/:word" element={<WordPage /> } />
-              <Route path="/search/:word" element={<SearchResultPage /> } />
-              <Route element={<Error />} />
-           </Routes>
-      </BrowserRouter>
+               <Route path="/" element={<MainPage />} />
+               <Route path="/about" element={<AboutPage />} />
+               <Route path="/index" element={<LetterIndexPage /> } />
+               <Route path="/index/:startWith" element={<SyllableIndexPage /> } />
+               <Route path="/wordlist/:startWith" element={<WordListPage /> } />
+               <Route path="/word/:word" element={<WordPage /> } />
+               <Route path="/search/:word" element={<SearchResultPage /> } />
+               <Route element={<Error />} />
+            </Routes>
+            <Footer />
+         </BrowserRouter>
+         
+      </>
   );
 }
 
