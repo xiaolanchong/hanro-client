@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import {Dropdown} from 'react-bootstrap'
+import {getServer} from './Server'
 
 
 type SearchSuggestionProps = {
@@ -39,8 +40,7 @@ const SearchControl = () => {
                 setSearchSuggestions([])
                 return
             }
-            const response = await fetch(`/api/words/${startWith}?offset=${offset}&limit=${limit}`)
-            const parsedWordList: WordList = await response.json()
+            const parsedWordList: WordList = await getServer().getWordList(startWith, offset, limit)
             setSearchSuggestions(parsedWordList.words)
         }
 

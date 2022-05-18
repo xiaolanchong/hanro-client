@@ -1,31 +1,33 @@
 import { useState, useEffect } from 'react'
-import {Modal, Button, Form} from 'react-bootstrap'
-import {Navbar, Container, Nav} from 'react-bootstrap'
+import {Modal, Button, Form, Alert, Navbar, Container, Nav} from 'react-bootstrap'
 import { getUser } from './Server'
+import { Registration } from './navbar/Registration'
 import './NavBar.css'
 
 const AuthControl = () => {
    const [username, setUsername] = useState<string|undefined>(undefined)
    
    useEffect(() => {
+      const userGetter = async () => {
+         const userInfo = await getUser().getUserInfo()
+         if (userInfo === undefined)
+            setUsername(undefined)
+         else
+            setUsername(userInfo.username)
+      }
       userGetter()
-   });
-
-   const userGetter = async () => {
-      const username = await getUser().getName();
-      setUsername(username);
-   }
+   }, []);
    
-   const onLogout = () => {
-      getUser().logout()
+   const onLogout = async () => {
+      await getUser().logout()
       setUsername(undefined)
    }
    
    return (username === undefined)
             ? (
                <span className="float-end text-center ">
-                  <Login />
-                  <Button variant="secondary m-2">Регистрация</Button>
+                  <Registration onRegistered={username =>setUsername(username) } />                  
+                  <Login onLoggedIn={ username =>setUsername(username)  } />
                </span>
             )
             : (
@@ -36,38 +38,57 @@ const AuthControl = () => {
             );
 }
 
-function Login() {
-  const [show, setShow] = useState<boolean>(false);
-  const [username, setUsername] = useState<string|undefined>();
-  const [password, setPassword] = useState<string|undefined>();
-  const [rememberMe, setRememberMe] = useState<boolean>(true);
-  //const history = useHistory();
-  
-   useEffect(() => {
-      if(username === undefined){
-         //deckGetter();
-      }
-   });
+type LoginErrorAlertParams = {
+   loginError: string
+}
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+function LoginErrorAlert({loginError}: LoginErrorAlertParams) {
+     return (
+       <Alert variant="danger" onClose={() => {}} >
+         <span>{loginError}</span>
+       </Alert>
+     );
+ }
+
+type LoginParams = {
+   onLoggedIn: (username: string) => void
+}
+
+function Login({onLoggedIn}: LoginParams) {
+  const [show, setShow] = useState<boolean>(false)
+  const [username, setUsername] = useState<string|undefined>()
+  const [password, setPassword] = useState<string|undefined>()
+  const [rememberMe, setRememberMe] = useState<boolean>(true)
+  const [loginError, setLogonError] = useState<string|undefined>()
+
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
   const login = () => {
         if (username !== undefined && password !== undefined)
-            getUser().login(username, password, rememberMe).then(() => {
-                setUsername(username);
-            //history.push('/');
-        });
+            getUser().login(username, password, rememberMe).then((loginRes) => {
+               if (loginRes === undefined) {
+                  setLogonError('Unknown error')
+               }
+               if (loginRes.success) {
+                  onLoggedIn(loginRes.username);
+                  setLogonError(undefined)
+                  handleClose()
+               } else if (loginRes.message !== undefined) {
+                  setLogonError(loginRes.message)
+               } else
+                  setLogonError('Unknown error')
+            });
   }
 
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Вход
+        Войти
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal className='dark-modal' show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Вход в систему</Modal.Title>
+          <Modal.Title>Войти в систему</Modal.Title>
         </Modal.Header>
         <Modal.Body>
          <Form>
@@ -78,14 +99,17 @@ function Login() {
            <Form.Group controlId="formBasicPassword">
              <Form.Control type="password" placeholder="Пароль" onChange={ (e) => setPassword(e.target.value) } />
            </Form.Group>
-           <Form.Group controlId="formBasicCheckbox">
-             <Form.Check type="checkbox" label="Запомнить" onChange={(e) => setRememberMe(e.target.checked)} />
+           <Form.Group  controlId="formBasicCheckbox">
+             <Form.Check className='mt-2' type="checkbox" label="Запомнить" onChange={(e) => setRememberMe(e.target.checked)} />
            </Form.Group>
          </Form>
+         {
+            loginError !== undefined ? <LoginErrorAlert loginError={loginError} /> : <></>
+         }
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" className="primary-dark"  onClick={ () => { handleClose(); login(); } }>
-            Вход
+          <Button variant="primary" className="primary-dark"  onClick={ () => { login(); } }>
+            Войти
           </Button>
           <Button variant="secondary" className="secondary-dark" onClick={handleClose}>
             Отмена
@@ -99,17 +123,17 @@ function Login() {
 const NavBar = () => {
    return <Navbar bg="dark" variant="dark">
    <Container>
-     <Navbar.Brand href="/">
-       <img
-         alt="logo"
-         src="/korean-russian-flag.png"
-         width="32"
-         height="32"
-         className="d-inline-block align-top"
-       />{' '}
-     Ханро
-     </Navbar.Brand>
-     <Nav className="me-auto">
+      <Navbar.Brand href="/">
+         <img
+            alt="logo"
+            src="/korean-russian-flag.png"
+            width="32"
+            height="32"
+            className="d-inline-block align-top"
+         />{' '}
+         Ханро
+      </Navbar.Brand>
+      <Nav className="me-auto">
         <Nav.Link href="/index">Содержание</Nav.Link>
       </Nav>
       <AuthControl />

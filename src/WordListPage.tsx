@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react"
 import {useParams } from 'react-router'
 import { useSearchParams } from "react-router-dom"
+import {WordList} from './ServerItf'
+import {getServer} from './Server'
 import './WordListPage.css'
 
-type WordList = {
-    words: string[],
-    startWithLetter: string,
-} 
 
 const getLink = (startWith: string, offset: number, limit: number) => {
     return `/wordlist/${startWith}?offset=${offset}&limit=${limit}`
@@ -23,8 +21,9 @@ const WordListPage = () => {
 
     useEffect(() => {
         const wordListGetter = async (startWith: string|undefined) => {
-            const response = await fetch(`/api/words/${startWith}?offset=${offset}&limit=${limit}`)
-            const parsedWordList: WordList = await response.json()
+            if (startWith === undefined)
+                return
+            const parsedWordList = await getServer().getWordList(startWith, offset, limit)
             setWordList(parsedWordList)
          }
 

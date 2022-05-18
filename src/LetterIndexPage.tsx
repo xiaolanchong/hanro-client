@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react"
 import './index.css'
+import {getServer} from './Server'
 
-type Entries = Array<string>
+type Entries = string[]
 
 const LetterIndexPage = () => {
     const [entries, setEntries] = useState<Entries>([])
 
     useEffect(() => {
         const indexGetter = async () => {
-            const response = await fetch(`/api/index`)
-            const parsedEntries: Entries = await response.json()
-            setEntries(parsedEntries);
+            const entries: Entries = await getServer().getIndexLetters()
+            setEntries(entries);
          }
 
         indexGetter()

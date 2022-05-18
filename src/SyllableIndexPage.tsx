@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react"
 import {useParams} from 'react-router'
 import { useSearchParams } from "react-router-dom"
-
+import {getServer} from './Server'
 import './SyllableIndexPage.css'
-
-type Entries = Array<string>
-
-const getApiLink = (startWith:string, offset:number, limit:number) => {
-    return `/api/index/${startWith}?offset=${offset}&limit=${limit}`
-}
 
 
 const SyllableIndexPage = () => {
@@ -18,15 +12,13 @@ const SyllableIndexPage = () => {
     const offsetStr = queryParams.get('offset') || '0'
     const offset = parseInt(offsetStr)
     const limit = 100
-    const [words, setWords] = useState<Entries>([])
+    const [words, setWords] = useState<string[]>([])
 
     useEffect(() => {
-
         const indexGetter = async (startWith: string|undefined) => {
             if (startWith === undefined)
                 return
-            const response = await fetch(getApiLink(startWith, offset, limit))
-            const parsedWords: Entries = await response.json()
+            const parsedWords = await getServer().getIndexSyllables(startWith, offset, limit)
             setWords(parsedWords);
          }
 
@@ -50,16 +42,5 @@ const SyllableIndexPage = () => {
         </div>
     </>
 }
-
-/*
-            <nav aria-label="Result pagination">
-                <ul className="pagination">
-                    {
-                      (offset > 0) ? <li className="page-item"><a className="page-link" href={getAppLink(startWith, offset - limit, limit)}>Назад</a></li> : <></>
-                    }
-                    <li className="page-item"><a className="page-link" href={getAppLink(startWith, offset + limit, limit)}>Вперед</a></li>
-                </ul>
-            </nav>
-*/
 
 export { SyllableIndexPage }

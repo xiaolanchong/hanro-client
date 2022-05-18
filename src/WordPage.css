@@ -1,5 +1,9 @@
 
 .sample-text {
-  font-family: Verdana;
-  font-size: 80%;
+  font-family: Tahoma;
+  /*font-size: 80%;*/
+}
+
+.def-header {
+  font-size: 120%;
 }

@@ -5,3 +5,7 @@
 .btn-secondary, .btn-secondary:hover, .btn-secondary:active, .btn-secondary:visited {
     background-color: #444444 !important;
 }
+
+.dark-modal .modal-content {
+  background-color: #333;
+}
